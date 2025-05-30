@@ -1,0 +1,4 @@
+#!/bin/bash
+CURRENT_DOMAIN=${CURRENT_DOMAIN}
+curl -X GET $CURRENT_DOMAIN
+
