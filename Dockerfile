@@ -4,7 +4,11 @@ FROM python:3.11-slim
 RUN apt-get update \
     && apt-get install -y tzdata \
     && ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
-    && echo "Asia/Seoul" > /etc/timezone
+    && echo "Asia/Seoul" > /etc/timezone \
+    && cron \
+    && curl \
+    && tzdata \
+
 
 WORKDIR /app
 
