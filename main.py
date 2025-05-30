@@ -63,6 +63,14 @@ async def privacy_policy(request: Request):
 
 @app.post("/cut")
 async def cut_url(payload: CutRequest, request: Request, db: Session = Depends(get_db)):
+    # 전체 개수가 1000개 이상이면 가장 오래된 거 하나 삭제
+    total_count = db.query(CutURL).count()
+    if total_count >= 1000:
+        oldest = db.query(CutURL).order_by(CutURL.created_at.asc()).first()
+        if oldest:
+            db.delete(oldest)
+            db.commit()
+
     timestamp = int(time.time())
     count = db.query(CutURL).filter(CutURL.timestamp_sec == timestamp).count()
     order = count + 1
