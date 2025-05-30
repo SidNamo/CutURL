@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Cut Url</title>
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/static/css/style.css?v={{ ts }}">
+    <script src="/static/js/main.js?v={{ ts }}" defer></script>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="/static/images/logo.png" alt="로고" class="logo-image">
+    </div>
+    <h1>URL 단축기</h1>
+    <div class="url-input-container">
+        <input id="inputUrl" type="text" placeholder="URL을 입력하세요" class="url-input">
+        <button onclick="cutURL()" class="btn">Cut</button>
+    </div>
+    <table id="recentTable">
+        <thead>
+            <tr>
+                <th>짧은 URL</th>
+                <th>원본 URL</th>
+                <th>생성일</th>
+                <th>복사</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in recent_urls %}
+                <tr data-url=''>
+                    <td>
+			<a href="javascript:window.open('{{ item.url_key}}', '_blank');">{{ item.url_key }}</a>
+                    </td>
+                    <td class="url">{{ item.original_url }}</td>
+                    <td >{{ item.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td class="actions">
+                        <button class="btn" onclick="copyToClipboard('{{ item.url_key }}')">Copy</button>
+                    </td>
+                    <td class="actions">
+			{% if item.is_owner %}
+                            <button class="btn" onclick="deleteURL({{ item.uid }})">Delete</button>
+			{% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
