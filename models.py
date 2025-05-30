@@ -1,10 +1,11 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import declarative_base
+from database import Base
 from datetime import datetime
 import pytz
 
 # Base 클래스 정의 (필수)
-Base = declarative_base()
+#Base = declarative_base()
 
 # Asia/Seoul 타임존 설정
 seoul_tz = pytz.timezone("Asia/Seoul")
