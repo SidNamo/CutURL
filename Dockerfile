@@ -2,12 +2,9 @@ FROM python:3.11-slim
 
 # 타임존 설정 추가
 RUN apt-get update \
-    && apt-get install -y tzdata \
+    && apt-get install -y tzdata cron curl \
     && ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
     && echo "Asia/Seoul" > /etc/timezone \
-    && cron \
-    && curl \
-    && tzdata \
 
 
 WORKDIR /app
