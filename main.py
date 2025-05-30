@@ -123,3 +123,11 @@ async def redirect_to_url(url_key: str, db: Session = Depends(get_db)):
         return HTMLResponse("Not found", status_code=404)
     return RedirectResponse(record.original_url)
 
+@app.get("/log", response_class=PlainTextResponse)
+async def get_log():
+    log_path = "./log/cron.log"
+    try:
+        with open(log_path, "r") as f:
+            return f.read()
+    except Exception as e:
+        return f"로그 파일을 읽을 수 없습니다: {e}"
