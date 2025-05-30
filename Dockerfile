@@ -22,6 +22,9 @@ COPY . /app
 COPY cron /etc/cron.d/cron
 RUN chmod 0644 /etc/cron.d/cron && crontab /etc/cron.d/cron
 
+mkdir -p /app/log
+touch /app/log/cron.log
+
 # 4. entrypoint.sh 실행권한
 RUN chmod +x /app/entrypoint.sh
 
