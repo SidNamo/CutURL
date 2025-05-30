@@ -1,1 +1,1 @@
-* * * * * /app/callme.sh
+*/10 * * * * /app/callme.sh
