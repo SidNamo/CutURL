@@ -36,6 +36,8 @@ app.add_middleware(
 local_tz = pytz.timezone("Asia/Seoul")
 
 OWNER_DOMAIN = os.environ.get("OWNER_DOMAIN")
+if "://" in OWNER_DOMAIN:
+    OWNER_DOMAIN = OWNER_DOMAIN.split("://", 1)[1].split("/", 1)[0]
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, db: Session = Depends(get_db)):
