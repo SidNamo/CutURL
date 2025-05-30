@@ -116,13 +116,6 @@ async def delete_url(payload: DeleteRequest, request: Request, db: Session = Dep
     return JSONResponse(content={"detail": "Deleted"}, status_code=200)
 
 
-@app.get("/{url_key}")
-async def redirect_to_url(url_key: str, db: Session = Depends(get_db)):
-    record = db.query(CutURL).filter_by(url_key=url_key).first()
-    if not record:
-        return HTMLResponse("Not found", status_code=404)
-    return RedirectResponse(record.original_url)
-
 @app.get("/log", response_class=PlainTextResponse)
 async def get_log():
     log_path = "./log/cron.log"
@@ -131,3 +124,11 @@ async def get_log():
             return f.read()
     except Exception as e:
         return f"로그 파일을 읽을 수 없습니다: {e}"
+
+@app.get("/{url_key}")
+async def redirect_to_url(url_key: str, db: Session = Depends(get_db)):
+    record = db.query(CutURL).filter_by(url_key=url_key).first()
+    if not record:
+        return HTMLResponse("Not found", status_code=404)
+    return RedirectResponse(record.original_url)
+
