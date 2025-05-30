@@ -18,7 +18,7 @@ RUN chmod 0644 /etc/cron.d/cron && crontab /etc/cron.d/cron
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install -r requirements.txt \
+    && pip install -r requirements.txt
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
