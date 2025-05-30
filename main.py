@@ -118,7 +118,7 @@ async def delete_url(payload: DeleteRequest, request: Request, db: Session = Dep
 
 @app.get("/log", response_class=PlainTextResponse)
 async def get_log():
-    log_path = "./log/cron.log"
+    log_path = "/app/log/cron.log"
     try:
         with open(log_path, "r") as f:
             return f.read()
