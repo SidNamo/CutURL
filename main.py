@@ -8,6 +8,7 @@ from database import get_db, Base, engine
 from models import CutURL
 from schemas import CutRequest, DeleteRequest
 from utils import base62_encode, get_client_ip
+import os
 import time
 import pytz
 import socket
@@ -34,15 +35,17 @@ app.add_middleware(
 # 서버 시간대 (예: 'Asia/Seoul'로 설정)
 local_tz = pytz.timezone("Asia/Seoul")
 
+OWNER_DOMAIN = os.environ.get("OWNER_DOMAIN")
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, db: Session = Depends(get_db)):
-    # 1. k-dev.me IP 조회
-    kdev_ip = socket.gethostbyname("k-dev.me")
+    # 1. IP 조회
+    owner_ip = socket.gethostbyname(OWNER_DOMAIN)
     # 2. 접속자 IP 추출
     client_ip = get_client_ip(request)
 
     # 3. 소유자 판별
-    is_owner = (client_ip == kdev_ip)
+    is_owner = (client_ip == owner_ip)
 
     # 4. URL 조
     recent_urls = db.query(CutURL).order_by(CutURL.created_at.desc()).limit(50).all()
@@ -90,13 +93,13 @@ async def cut_url(payload: CutRequest, request: Request, db: Session = Depends(g
 
 @app.delete("/delete")
 async def delete_url(payload: DeleteRequest, request: Request, db: Session = Depends(get_db)):
-    # 1. k-dev.me IP 조회
-    kdev_ip = socket.gethostbyname("k-dev.me")
+    # 1.IP 조회
+    owner_ip = socket.gethostbyname(OWNER_DOMAIN)
     # 2. 접속자 IP 추출
     client_ip = get_client_ip(request)
 
     # 3. 소유자 판별
-    is_owner = (client_ip == kdev_ip)
+    is_owner = (client_ip == owner_ip)
 
     record = db.query(CutURL).filter_by(uid=payload.uid).first()
     if not record:

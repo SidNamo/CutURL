@@ -1,1 +1,1 @@
-*/10 * * * * curl -X GET http://localhost
+*/10 * * * * /app/callme.sh
