@@ -7,9 +7,12 @@ RUN apt-get update \
 
 WORKDIR /app
 
+# uv 직접 설치 (공식 pip 패키지 사용)
+RUN pip install --no-cache-dir uv
+
 # 1. pip 캐시 최적화를 위해 requirements.txt만 먼저 복사 후 설치
 COPY requirements.txt ./
-RUN pip install --no-cache-dir --upgrade pip && pip install -r requirements.txt
+RUN uv pip install --no-cache-dir --upgrade pip && uv pip install -r requirements.txt
 
 # 2. 전체 소스 복사 (entrypoint.sh, cron 등 포함)
 COPY . /app
