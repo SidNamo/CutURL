@@ -13,6 +13,7 @@ import pytz
 import socket
 from datetime import datetime
 
+# 테이블 자동 생성
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
