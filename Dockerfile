@@ -1,30 +1,25 @@
 FROM python:3.11-slim
 
-# 타임존 설정 추가
 RUN apt-get update \
     && apt-get install -y tzdata cron curl \
     && ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime \
     && echo "Asia/Seoul" > /etc/timezone
 
-
 WORKDIR /app
 
+# 1. pip 캐시 최적화를 위해 requirements.txt만 먼저 복사 후 설치
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade pip && pip install -r requirements.txt
+
+# 2. 전체 소스 복사 (entrypoint.sh, cron 등 포함)
 COPY . /app
 
-
-# CRON 복사
+# 3. cron 등록
 COPY cron /etc/cron.d/cron
 RUN chmod 0644 /etc/cron.d/cron && crontab /etc/cron.d/cron
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install -r requirements.txt
+# 4. entrypoint.sh 실행권한
+RUN chmod +x /app/entrypoint.sh
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-ENTRYPOINT ["/entrypoint.sh"]
-
-#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
-
+ENTRYPOINT ["/app/entrypoint.sh"]
 
