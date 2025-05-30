@@ -19,10 +19,12 @@ RUN chmod 0644 /etc/cron.d/cron && crontab /etc/cron.d/cron
 COPY requirements.txt ./
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install -r requirements.txt \
-    && pip install supervisor
 
-COPY supervisord.conf /etc/supervisord.conf
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
+ENTRYPOINT ["/entrypoint.sh"]
 
 #CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+
+
